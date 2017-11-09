@@ -1,12 +1,17 @@
 from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, emit, join_room, leave_room, \
     close_room, rooms, disconnect, send
+# from __future__ import print_function
+# import pymysql
+from subprocess import call
+
 # https://flask-socketio.readthedocs.io/en/latest/
 # https://github.com/socketio/socket.io-client
 
 app = Flask(__name__)
 
 app.config[ 'SECRET_KEY' ] = 'jsbcfsbfjefebw237u3gdbdc'
+
 socketio = SocketIO( app )
 users = []
 connections = []
@@ -79,4 +84,4 @@ def new_user(data):
 
 
 if __name__ == '__main__':
-	socketio.run( app, debug = True )
+	socketio.run(app, debug=True, host="kite.cs.illinois.edu", port=5000)
