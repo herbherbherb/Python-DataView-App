@@ -45,10 +45,18 @@
         <div class="chat", id ="chat"></div>
           <form id ="messageForm">
             <div class="form-group">
-              <label>Enter Query:</label>
+              <label>Enter Query by Name:</label>
               <textarea class="form-control" id="message"></textarea>
               <br />
-              <input type="submit" class="btn btn-primary" value="Send Query" />
+              <input type="submit" class="btn btn-primary" value="Send Query Name" />
+            </div>
+          </form>
+          <form id ="messageFormDesc">
+            <div class="form-group">
+              <label>Enter Query by Description:</label>
+              <textarea class="form-control" id="messageDesc"></textarea>
+              <br />
+              <input type="submit" class="btn btn-success" value="Send Query Description" />
             </div>
           </form>
           <form id ="domainForm">
@@ -71,7 +79,9 @@
       $(function(){
       var socket = io.connect();
       var $messageForm = $('#messageForm');
+      var $messageFormDesc = $('#messageFormDesc');
       var $message = $('#message');
+      var $messageDesc = $('#messageDesc');
       var $domain = $('#domain');
       var $currentdomain = $('#currentdomain');
       var $domainForm = $('#domainForm');
@@ -89,6 +99,12 @@
         console.log($message.val());
         socket.emit('send message', {username: $username.val(), message: $message.val(), domain_name: $domain.val()});
         $message.val(''); //message empty now 
+      });
+
+      $messageFormDesc.submit(function(e){
+        e.preventDefault();
+        socket.emit('send message by desc', {username: $username.val(), message: $messageDesc.val(), domain_name: $domain.val()});
+        $messageDesc.val(''); //messageDesc empty now 
       });
 
       $domainForm.submit(function(e){
