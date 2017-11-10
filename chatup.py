@@ -4,6 +4,7 @@ from flask_socketio import SocketIO, emit, join_room, leave_room, \
 # from __future__ import print_function
 # import pymysql
 from subprocess import call
+from urlparse import urlparse
 import requests
 import grequests
 # https://flask-socketio.readthedocs.io/en/latest/
@@ -64,14 +65,11 @@ def change_domain(data):
 	send(username + ' has entered your domain', room=newdomain)
 	emit('new domain', 'You entered ' + newdomain + ' successfully!', room=request.sid)
 
-
-
-
 def print_url(r, *args, **kwargs):
-	print('boom!')
+	print('Query recieved!')
 
 def print_url_desc(r, *args, **kwargs):
-	print('boom description!')
+	print('Query Description recieved!')
 
 def calllib(domain, message):
 	payload = {'url': domain, 'query': message}
@@ -82,6 +80,7 @@ def calllib(domain, message):
 def send_message(data):
 	username = data['username']
 	message = data['message']
+	message = urlparse(message)
 	domain = dic[request.sid]
 	payload = {'url': domain, 'query': message}
 	r = requests.get(url, hooks={'response': print_url}, params=payload)
@@ -91,10 +90,12 @@ def send_message(data):
 def send_message_by_desc(data):
 	username = data['username']
 	message = data['message']
+	message = urlparse(message)
 	domain = dic[request.sid]
 	payload_desc = {'url': domain, 'querydesc': message}
 	r = requests.get(url, hooks={'response': print_url_desc}, params=payload_desc)
 	emit('new message', {'msg': r.text, 'users': username}, room=domain)
+
 # @socketio.on('send message')
 # def send_message(data):
 # 	username = data['username']
