@@ -35,7 +35,7 @@
     <div id="messageArea" class="row">
       <div class="col-md-4">
         <div class="well">
-          <h3>Online Users: </h3>
+          <h3>Users in Your Domain: </h3>
           <ul class="list-group" id="users"></ul>
           <h3>Your Current Domain Name: </h3>
           <ul class="list-group" id="currentdomain"></ul>
@@ -144,6 +144,10 @@
       socket.on('get domains', function(data){
         var html = '<li class="list-group-item" style="color: blue">'+data+'</li>';
         $currentdomain.html(html);
+      });
+
+       window.addEventListener('unload', function(event) {
+         socket.emit('leave', {username: $username.val(), domain_name: $domain.val()});
       });
     });
     </script>

@@ -33,8 +33,6 @@ def handle_my_custom_event( json ):
   print ('current user id is: ' + request.sid)
   socketio.emit( 'my response', json, callback=messageRecived )
 
-
-
 @socketio.on('join')
 def on_join(data):
 	username = data['username']
@@ -48,15 +46,17 @@ def on_join(data):
 def on_leave(data):
 	username = data['username']
 	domain = data['domain_name']
-	leave_room(domain)
-	send(username + ' has left your domain', room=domain)
-	emit('leave domain', 'You left ' + domain + 'successfully!', room=request.sid)
-
-
+	# leave_room(domain)
+	# send(username + ' has left your domain', room=domain)
+	# emit('leave domain', 'You left ' + domain + 'successfully!', room=request.sid)
+	for x in users:
+		if x == username:
+			users.remove(x)
+	emit('get users', users, room=domain)
 
 @socketio.on( 'change domain' )
 def change_domain(data): 
-	username = data['username']
+	username = data['username']	
 	newdomain = data['domain_name']
 	olddomain = dic[request.sid]
 	dic[request.sid] = newdomain
